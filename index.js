@@ -7,6 +7,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const cors = require("cors");
+
+const optionsCors = [
+  "http://localhost:3000",
+  "https://battlezombie.vercel.app",
+];
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
@@ -30,7 +35,22 @@ let gameData = {
     playBoard: [],
   },
 };
+app.get("/", (req, res) => {
+  const origin = req.header("origin");
+  if (optionsCors.includes(origin) || !origin) {
+    req.header("Access-Control-Allow-Origin", origin);
+    req.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  }
+  const response = `<div>Soy un proyecto backend</div>`;
+  res.send(response);
+});
+
 app.get("/api/get-game/:idGame/:idPlayer/:namePlayer", (req, res) => {
+  const origin = req.header("origin");
+  if (optionsCors.includes(origin) || !origin) {
+    req.header("Access-Control-Allow-Origin", origin);
+    req.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  }
   const idGame = req.params.idGame;
   const idPlayer = req.params.idPlayer;
   const name = req.params.namePlayer;
@@ -43,6 +63,11 @@ app.get("/api/get-game/:idGame/:idPlayer/:namePlayer", (req, res) => {
   res.json(gameData);
 });
 app.post("/api/shot", (req, res) => {
+  const origin = req.header("origin");
+  if (optionsCors.includes(origin) || !origin) {
+    req.header("Access-Control-Allow-Origin", origin);
+    req.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  }
   const { idGame, idPlayer, xPosition, yPosition } = req.body;
 
   if (
@@ -104,6 +129,11 @@ app.post("/api/shot-computer", (req, res) => {
 });
 
 app.post("/api/select-board", (req, res) => {
+  const origin = req.header("origin");
+  if (optionsCors.includes(origin) || !origin) {
+    req.header("Access-Control-Allow-Origin", origin);
+    req.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  }
   const { board, playerName } = req.body;
   if (board && playerName) {
     selectedBoard = board;
